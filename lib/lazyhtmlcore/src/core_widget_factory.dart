@@ -704,7 +704,7 @@ class LazyWidgetFactory {
         break;
 
       case 'title':
-        meta..[kCssFontSize] = '0em';
+        meta.element.text = '';
         break;
 
       case 'button': //addition!!!!!增加项

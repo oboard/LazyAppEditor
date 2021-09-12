@@ -1,8 +1,21 @@
 // import 'package:example/readme/readme_examples.dart';
+import 'package:code_text_field/code_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:lazyappeditor/applet_page.dart';
+
+import 'package:event_bus/event_bus.dart';
 
 import 'custom_code_box.dart';
+import 'lazyhtmlcore/src/widgets/button.dart';
 
+CodeController? codeController;
+EventBus eventBus = EventBus();
+String codecode = '''
+<title>小程序</title>
+<button href="">
+    <center>Hello World</center>
+</button>
+''';
 void main() {
   runApp(MyApp());
 }
@@ -12,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Code field',
+      title: 'LazyApp 编辑器',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
@@ -42,7 +55,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final preset = <String>[
-      "htmlbars|vs",
+      "xml|vs",
     ];
     List<Widget> children = preset.map((e) {
       final parts = e.split('|');
@@ -51,17 +64,30 @@ class _HomePageState extends State<HomePage> {
         language: parts[0],
         theme: parts[1],
       );
+
       return Padding(
         padding: EdgeInsets.only(bottom: 32.0),
         child: box,
       );
     }).toList();
-    final page = Center(
-      child: Container(
-        constraints: BoxConstraints(maxWidth: 900),
-        padding: EdgeInsets.symmetric(vertical: 32.0),
-        child: Column(children: children),
-      ),
+    final page = Column(
+      children: [
+        LazyButton(
+          child: Icon(Icons.run_circle),
+          color: Colors.red,
+          onPressed: () {
+            codecode = codeController!.text;
+            eventBus.fire('event');
+          },
+        ),
+        Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 900),
+            padding: EdgeInsets.symmetric(vertical: 32.0),
+            child: Column(children: children),
+          ),
+        ),
+      ],
     );
 
     // return Scaffold(
@@ -77,7 +103,12 @@ class _HomePageState extends State<HomePage> {
         // title: Text("Recursive Fibonacci"),
         centerTitle: false,
       ),
-      body: SingleChildScrollView(child: page),
+      body: Row(
+        children: [
+          Expanded(child: SingleChildScrollView(child: page)),
+          Expanded(child: AppletPage(codecode))
+        ],
+      ),
       // body: CodeEditor5(),
     );
   }

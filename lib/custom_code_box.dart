@@ -4,6 +4,7 @@ import 'package:highlight/languages/all.dart';
 import 'package:lazyappeditor/themes.dart';
 
 import 'code_snippets.dart';
+import 'main.dart';
 
 class CustomCodeBox extends StatefulWidget {
   final String language;
@@ -121,13 +122,11 @@ class InnerField extends StatefulWidget {
 }
 
 class _InnerFieldState extends State<InnerField> {
-  CodeController? _codeController;
-
   @override
   void initState() {
     super.initState();
-    _codeController = CodeController(
-      text: CODE_SNIPPETS[widget.language],
+    codeController = CodeController(
+      text: codecode,
       patternMap: {
         r"\B#[a-zA-Z0-9]+\b": TextStyle(color: Colors.red),
         r"\B@[a-zA-Z0-9]+\b": TextStyle(
@@ -147,14 +146,14 @@ class _InnerFieldState extends State<InnerField> {
 
   @override
   void dispose() {
-    _codeController?.dispose();
+    codeController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return CodeField(
-      controller: _codeController!,
+      controller: codeController!,
       textStyle: TextStyle(fontFamily: 'SourceCode'),
     );
   }
